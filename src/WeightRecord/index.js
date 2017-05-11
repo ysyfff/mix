@@ -18,13 +18,14 @@ export default class WeightRecord extends Component {
         super(props)
         this.state = {
             record: [],
-            weigth: ''
+            weigth: '',
+            edit: false
         }
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('record', (e, v)=>{
-            this.setState({record: JSON.parse(v) || []})
+        AsyncStorage.getItem('record', (e, v) => {
+            this.setState({ record: JSON.parse(v) || [] })
         })
     }
 
@@ -59,9 +60,30 @@ export default class WeightRecord extends Component {
                     {this.state.record.map((item, i) => {
                         return (
                             <View style={styles.row} key={i}>
-                                <Text>
-                                    <Text style={styles.date}>{item.date}</Text> {item.weigth} KG
-                                </Text>
+                                <View style={{ flex: 1 }}>
+                                    <Text>
+                                        <Text style={styles.date}>{item.date}</Text> {item.weigth} KG
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity style={{ paddingHorizontal: 5, paddingVertical: 2 }} onPress={e => {
+                                    }}>
+                                        <Text>
+                                            编辑
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity style={{ paddingHorizontal: 5, paddingVertical: 2 }} onPress={e => {
+                                        let { record } = this.state
+                                        record.splice(i, 1)
+                                        this.setState({ record })
+                                        AsyncStorage.setItem('record', JSON.stringify(record))
+                                    }}>
+                                        <Text>
+                                            删除
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         )
                     })}
@@ -101,6 +123,7 @@ const styles = StyleSheet.create({
     },
 
     row: {
+        flexDirection: 'row',
         paddingVertical: 5,
         borderBottomWidth: 1,
         borderBottomColor: 'pink'
